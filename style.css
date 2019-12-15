@@ -6,6 +6,8 @@
 	font-family: helvetica;
 	font-size: 40px;
 	text-align: right;
+	word-wrap: break-word;
+	overflow: auto;
 }
 
 .calculator {
