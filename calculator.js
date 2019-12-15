@@ -41,8 +41,19 @@ function operate(operator, op1, op2) {
 	return operator(op1, op2);
 }
 
-listOfButtons.forEach(button => button.addEventListener('click', displayValue));
-function displayValue(e) {
-	const text = e.target.dataset.value;
-	screen.textContent += text;
+listOfButtons.forEach(button => button.addEventListener('click', function(e) {
+	const button = e.target;
+	if (button.dataset.operator == "clear") {
+		clearScreen();
+	} else {
+		displayValue(button.dataset.value);
+	}
+	}));
+
+function displayValue(textToDisplay) {
+	screen.textContent += textToDisplay;
+}
+
+function clearScreen() {
+	screen.textContent = "";
 }
