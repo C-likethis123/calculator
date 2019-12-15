@@ -1,5 +1,8 @@
 const invalid_input = "not valid!";
 
+const screen = document.querySelector('.screen');
+const listOfButtons = document.querySelectorAll('button');
+
 function isAllNumbers(...nums) {
 	for (i in nums) {
 		if (typeof(nums[i]) != "number") {
@@ -35,13 +38,11 @@ function divide(op1, op2) {
 }
 
 function operate(operator, op1, op2) {
-	if (operator == "+") {
-		return add(op1, op2);
-	} else if (operator == "-") {
-		return subtract(op1, op2);
-	} else if (operator == "*") {
-		return multiply(op1, op2);
-	} else if (operator == "/") {
-		return divide(op1, op2);
-	}
+	return operator(op1, op2);
+}
+
+listOfButtons.forEach(button => button.addEventListener('click', displayValue));
+function displayValue(e) {
+	const text = e.target.dataset.value;
+	screen.textContent += text;
 }
