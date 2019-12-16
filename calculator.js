@@ -2,7 +2,11 @@ const invalid_input = "not valid!";
 
 const screen = document.querySelector('.screen');
 const listOfButtons = document.querySelectorAll('button');
+let valueInMemory = 0;
+let tempOperand1 = null;
+let operationInMemory = null;
 
+//misc helper functions
 function isAllNumbers(...nums) {
 	for (i in nums) {
 		if (typeof(nums[i]) != "number") {
@@ -38,17 +42,20 @@ function divide(op1, op2) {
 }
 
 function operate(operator, op1, op2) {
-	return operator(op1, op2);
+	switch(operator) {
+		case '+':
+			return add(op1, op2);
+		case '-':
+			return subtract(op1, op2);
+		case '*':
+			return multiply(op1, op2);
+		case '÷':
+			return divide(op1, op2);
+		default:
+			displayValue("invalid_input");
+			return;
+	}	
 }
-
-listOfButtons.forEach(button => button.addEventListener('click', function(e) {
-	const button = e.target;
-	if (button.dataset.operator == "clear") {
-		clearScreen();
-	} else {
-		displayValue(button.dataset.value);
-	}
-	}));
 
 function displayValue(textToDisplay) {
 	screen.textContent += textToDisplay;
@@ -57,3 +64,30 @@ function displayValue(textToDisplay) {
 function clearScreen() {
 	screen.textContent = "";
 }
+
+function handleOperation(operation) {
+	if (!tempOperand1) {
+		valueInMemory = Number(screen.textContent);
+		tempOperand1 = Number(screen.textContent);
+		operationInMemory = operation;
+	} else {
+		const secondOperand = Number(screen.textContent);
+		valueInMemory = operate(operationInMemory, valueInMemory, secondOperand);
+		displayValue(valueInMemory);
+	}
+}
+
+listOfButtons.forEach(button => button.addEventListener('click', function(e) {
+	const button = e.target;
+	if (button.dataset.function == "clear") {
+		clearScreen();
+	} else if ("operator" in button.dataset) {
+		handleOperation(button.dataset.value);
+		clearScreen();
+		//displayValue(button.dataset.value);
+	} else if (button.dataset.function == "equals") {
+		handleOperation(operationInMemory);
+	} else {
+		displayValue(button.dataset.value);
+	}
+	}));
