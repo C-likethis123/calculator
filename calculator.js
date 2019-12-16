@@ -117,8 +117,7 @@ listOfNumberButtons.forEach(button => button.addEventListener('click', function(
 
 const listOfOperatorButtons = document.querySelectorAll('button[data-operator]');
 listOfOperatorButtons.forEach(button => button.addEventListener('click', function(e) {
-	handleOperation(button.dataset.value);
-	clearScreen();
+	addValue(button.dataset.value);
 }));
 
 //event handlers for misc buttons
