@@ -2,9 +2,9 @@ const invalid_input = "not valid!";
 
 const screen = document.querySelector('.screen');
 const listOfButtons = document.querySelectorAll('button');
-let valueInMemory = [];
-let tempOperand1 = null;
-let operationInMemory = null;
+const listOfOperators = ['+', '-', '*', '÷'];
+
+let lastComputedValue = null;
 
 //misc helper functions
 function isAllNumbers(...nums) {
@@ -14,6 +14,10 @@ function isAllNumbers(...nums) {
 		}
 	}
 	return true;
+}
+
+function isOperator(character) {
+	return listOfOperators.includes(character);
 }
 
 //Basic arithmetic functions
@@ -75,38 +79,29 @@ function deleteCharacter() {
 	screen.textContent = currentDisplay;
 }
 
-function handleOperation(operation) {
-	/*case 1: it is empty. i put the first operand and operator in memory. 
-	--> valueInMemory.length == 0, tempOperand == null
-
-	case 2: there are two operands. i evaluate both operands and store them in memory. 
-	-
-	case 3: there is a previous result, but no second operand. i press add. 
-
-	what i can do: add a 'stack' to store the operands. if there are two operators, add them both and store the result to a separate variable. 
-	clear the operators. 
-
-	if there are nothing in the 'stack' when there is an operator, check the variable. 
-
-
-	*/
-	if (valueInMemory.length == 0) {
-		if (tempOperand1 == null) {
-			const valueOnScreen = Number(screen.textContent);
-			valueInMemory.push(valueOnScreen);
-			operationInMemory = operation;
+function evaluatePostFixExpression(abstractSyntaxTree) {
+	let stack = [];
+	for (let i = 0; i < abstractSyntaxTree.length; i++) {
+		let character = abstractSyntaxTree[i];
+		
+		if (isOperator(character)) {
+			let firstElement = stack.pop();
+			let secondElement = stack.pop();
+			let result = operate(character, secondElement, firstElement);
+			stack.push(result);
+		} else if (isAllNumbers(+character)) {
+			stack.push(+character);
 		} else {
-			//when there is a previous evaluated value, add that to the valueInMemory array.
-			valueInMemory.push(tempOperand1);
-			operationInMemory = operation;
+			return invalid_input;
 		}
-	} else if (valueInMemory.length == 1) {
-		//if there is an operand in memory, evaluate that expression
-		const valueOnScreen = Number(screen.textContent);
-		let result = operate(operation, valueInMemory.pop(), valueOnScreen);
-		displayValue(result);
-		tempOperand1 = result;
 	}
+	return stack.pop();
+}
+
+function handleOperation(expression) {
+	let splitOperators = expression.match(/[^\d()]+|[\d.]+/g);
+	let abstractSyntaxTree = getAbstractSyntaxTree(splitOperators);
+	let result = evaluatePostFixExpression(abstractSyntaxTree);
 }
 
 const listOfNumberButtons = document.querySelectorAll('.number');
@@ -138,6 +133,6 @@ decimalButton.addEventListener('click', function(e) {
 
 const equalsButton = document.querySelector('button[data-function=equals]');
 equalsButton.addEventListener('click', function(e) {
-	handleOperation(operationInMemory);
-	operationInMemory = null;
+	const expression = screen.textContent;
+	handleOperation(expression);
 })
