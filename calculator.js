@@ -2,7 +2,8 @@ const invalid_input = "not valid!";
 
 const screen = document.querySelector('.screen');
 const listOfButtons = document.querySelectorAll('button');
-let valueInMemory = null;
+let valueInMemory = [];
+let tempOperand1 = null;
 let operationInMemory = null;
 
 //misc helper functions
@@ -68,14 +69,43 @@ function clearScreen() {
 	screen.textContent = "";
 }
 
+function deleteCharacter() {
+	let currentDisplay = screen.textContent;
+	currentDisplay = currentDisplay.substring(0, currentDisplay.length - 1);
+	screen.textContent = currentDisplay;
+}
+
 function handleOperation(operation) {
-	if (!valueInMemory) {
-		valueInMemory = Number(screen.textContent);
-		operationInMemory = operation;
-	} else {
-		const secondOperand = Number(screen.textContent);
-		valueInMemory = operate(operationInMemory, valueInMemory, secondOperand);
-		displayValue(valueInMemory);
+	/*case 1: it is empty. i put the first operand and operator in memory. 
+	--> valueInMemory.length == 0, tempOperand == null
+
+	case 2: there are two operands. i evaluate both operands and store them in memory. 
+	-
+	case 3: there is a previous result, but no second operand. i press add. 
+
+	what i can do: add a 'stack' to store the operands. if there are two operators, add them both and store the result to a separate variable. 
+	clear the operators. 
+
+	if there are nothing in the 'stack' when there is an operator, check the variable. 
+
+
+	*/
+	if (valueInMemory.length == 0) {
+		if (tempOperand1 == null) {
+			const valueOnScreen = Number(screen.textContent);
+			valueInMemory.push(valueOnScreen);
+			operationInMemory = operation;
+		} else {
+			//when there is a previous evaluated value, add that to the valueInMemory array.
+			valueInMemory.push(tempOperand1);
+			operationInMemory = operation;
+		}
+	} else if (valueInMemory.length == 1) {
+		//if there is an operand in memory, evaluate that expression
+		const valueOnScreen = Number(screen.textContent);
+		let result = operate(operation, valueInMemory.pop(), valueOnScreen);
+		displayValue(result);
+		tempOperand1 = result;
 	}
 }
 
@@ -91,11 +121,19 @@ listOfOperatorButtons.forEach(button => button.addEventListener('click', functio
 	clearScreen();
 }));
 
+//event handlers for misc buttons
+const deleteButton = document.querySelector('button[data-function=delete]');
+deleteButton.addEventListener('click', function(e) {
+	deleteCharacter();
+});
+
 const clearButton = document.querySelector('button[data-function=clear');
 clearButton.addEventListener('click', function(e) {
 	clearScreen();
 })
+
 const equalsButton = document.querySelector('button[data-function=equals]');
 equalsButton.addEventListener('click', function(e) {
 	handleOperation(operationInMemory);
+	operationInMemory = null;
 })
