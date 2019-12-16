@@ -2,8 +2,7 @@ const invalid_input = "not valid!";
 
 const screen = document.querySelector('.screen');
 const listOfButtons = document.querySelectorAll('button');
-let valueInMemory = 0;
-let tempOperand1 = null;
+let valueInMemory = null;
 let operationInMemory = null;
 
 //misc helper functions
@@ -58,6 +57,10 @@ function operate(operator, op1, op2) {
 }
 
 function displayValue(textToDisplay) {
+	screen.textContent = textToDisplay;
+}
+
+function addValue(textToDisplay) {
 	screen.textContent += textToDisplay;
 }
 
@@ -66,9 +69,8 @@ function clearScreen() {
 }
 
 function handleOperation(operation) {
-	if (!tempOperand1) {
+	if (!valueInMemory) {
 		valueInMemory = Number(screen.textContent);
-		tempOperand1 = Number(screen.textContent);
 		operationInMemory = operation;
 	} else {
 		const secondOperand = Number(screen.textContent);
@@ -88,6 +90,6 @@ listOfButtons.forEach(button => button.addEventListener('click', function(e) {
 	} else if (button.dataset.function == "equals") {
 		handleOperation(operationInMemory);
 	} else {
-		displayValue(button.dataset.value);
+		addValue(button.dataset.value);
 	}
 	}));
