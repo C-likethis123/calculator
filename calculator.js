@@ -130,7 +130,12 @@ deleteButton.addEventListener('click', function(e) {
 const clearButton = document.querySelector('button[data-function=clear');
 clearButton.addEventListener('click', function(e) {
 	clearScreen();
-})
+});
+
+const decimalButton = document.querySelector('button[data-value=dot]');
+decimalButton.addEventListener('click', function(e) {
+	addValue(".");
+});
 
 const equalsButton = document.querySelector('button[data-function=equals]');
 equalsButton.addEventListener('click', function(e) {
