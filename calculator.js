@@ -79,17 +79,23 @@ function handleOperation(operation) {
 	}
 }
 
-listOfButtons.forEach(button => button.addEventListener('click', function(e) {
+const listOfNumberButtons = document.querySelectorAll('.number');
+listOfNumberButtons.forEach(button => button.addEventListener('click', function(e) {
 	const button = e.target;
-	if (button.dataset.function == "clear") {
-		clearScreen();
-	} else if ("operator" in button.dataset) {
-		handleOperation(button.dataset.value);
-		clearScreen();
-		//displayValue(button.dataset.value);
-	} else if (button.dataset.function == "equals") {
-		handleOperation(operationInMemory);
-	} else {
-		addValue(button.dataset.value);
-	}
-	}));
+	addValue(button.dataset.value);
+}));
+
+const listOfOperatorButtons = document.querySelectorAll('button[data-operator]');
+listOfOperatorButtons.forEach(button => button.addEventListener('click', function(e) {
+	handleOperation(button.dataset.value);
+	clearScreen();
+}));
+
+const clearButton = document.querySelector('button[data-function=clear');
+clearButton.addEventListener('click', function(e) {
+	clearScreen();
+})
+const equalsButton = document.querySelector('button[data-function=equals]');
+equalsButton.addEventListener('click', function(e) {
+	handleOperation(operationInMemory);
+})
