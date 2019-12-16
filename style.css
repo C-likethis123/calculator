@@ -5,9 +5,10 @@ h1, p {
 }
 
 .screen {
-	border: 1px black solid;
-	height: 200px;
-	width: 300px;
+	border: 5px black solid;
+	height: 190px;
+	width: 270px;
+	padding: 10px;
 
 	font-family: helvetica;
 	font-size: 40px;
