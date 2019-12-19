@@ -2,9 +2,9 @@ const invalid_input = "not valid!";
 
 const screen = document.querySelector('.screen');
 const listOfButtons = document.querySelectorAll('button');
-let valueInMemory = [];
-let tempOperand1 = null;
-let operationInMemory = null;
+const listOfOperators = ['+', '-', '*', '÷'];
+
+let lastComputedValue = null;
 
 //misc helper functions
 function isAllNumbers(...nums) {
@@ -14,6 +14,10 @@ function isAllNumbers(...nums) {
 		}
 	}
 	return true;
+}
+
+function isOperator(character) {
+	return listOfOperators.includes(character);
 }
 
 //Basic arithmetic functions
@@ -75,38 +79,99 @@ function deleteCharacter() {
 	screen.textContent = currentDisplay;
 }
 
-function handleOperation(operation) {
-	/*case 1: it is empty. i put the first operand and operator in memory. 
-	--> valueInMemory.length == 0, tempOperand == null
+// Code adapted from: https://rosettacode.org/wiki/Parsing/Shunting-yard_algorithm#JavaScript
+function getAbstractSyntaxTree(infix) {
+	function Stack() {
+		this.dataStore = [];
+		this.top = 0;
+		this.push = push;
+		this.pop = pop;
+		this.peek = peek;
+		this.length = length;
+	  }
+	   
+	  function push(element) {
+		this.dataStore[this.top++] = element;
+	  }
+	   
+	  function pop() {
+		return this.dataStore[--this.top];
+	  }
+	   
+	  function peek() {
+		return this.dataStore[this.top-1];
+	  }
+	   
+	  function length() {
+		return this.top;
+	  }
 
-	case 2: there are two operands. i evaluate both operands and store them in memory. 
-	-
-	case 3: there is a previous result, but no second operand. i press add. 
-
-	what i can do: add a 'stack' to store the operands. if there are two operators, add them both and store the result to a separate variable. 
-	clear the operators. 
-
-	if there are nothing in the 'stack' when there is an operator, check the variable. 
-
-
-	*/
-	if (valueInMemory.length == 0) {
-		if (tempOperand1 == null) {
-			const valueOnScreen = Number(screen.textContent);
-			valueInMemory.push(valueOnScreen);
-			operationInMemory = operation;
-		} else {
-			//when there is a previous evaluated value, add that to the valueInMemory array.
-			valueInMemory.push(tempOperand1);
-			operationInMemory = operation;
+	  let s = new Stack();
+	  let ops = "-+/*^";
+	  const precedence = {"^":4, "*":3, "/":3, "+":2, "-":2};
+	  const associativity = {"^":"Right", "*":"Left", "/":"Left", "+":"Left", "-":"Left"};
+	  let postfix = [];
+	  let o1, o2;
+	   
+	  for (let i = 0; i < infix.length; i++) {
+		let token = infix[i];
+		if (token >= "0" && token <= "9") { // if token is operand (here limited to 0 <= x <= 9)
+		  postfix.push(token);
 		}
-	} else if (valueInMemory.length == 1) {
-		//if there is an operand in memory, evaluate that expression
-		const valueOnScreen = Number(screen.textContent);
-		let result = operate(operation, valueInMemory.pop(), valueOnScreen);
-		displayValue(result);
-		tempOperand1 = result;
+		else if (ops.indexOf(token) != -1) { // if token is an operator
+		  o1 = token;
+		  o2 = s.peek();
+		  while (ops.indexOf(o2)!=-1 && ( // while operator token, o2, on top of the stack
+			// and o1 is left-associative and its precedence is less than or equal to that of o2
+			(associativity[o1] == "Left" && (precedence[o1] <= precedence[o2]) ) || 
+			// the algorithm on wikipedia says: or o1 precedence < o2 precedence, but I think it should be
+			// or o1 is right-associative and its precedence is less than that of o2
+			(associativity[o1] == "Right" && (precedence[o1] < precedence[o2])) 
+			)){
+			  postfix.push(o2); // add o2 to output queue
+			  s.pop(); // pop o2 of the stack
+			  o2 = s.peek(); // next round
+		  }
+		  s.push(o1); // push o1 onto the stack
+		}
+		else if (token == "(") { // if token is left parenthesis
+		  s.push(token); // then push it onto the stack
+		}
+		else if (token == ")") { // if token is right parenthesis 
+		  while (s.peek() != "("){ // until token at top is (
+			postfix += s.pop() + " ";
+		  }
+		  s.pop(); // pop (, but not onto the output queue
+		}
+	  }
+	  return postfix.concat(s.dataStore.reverse());
+}
+
+function evaluatePostFixExpression(abstractSyntaxTree) {
+	let stack = [];
+	for (let i = 0; i < abstractSyntaxTree.length; i++) {
+		let character = abstractSyntaxTree[i];
+		
+		if (isOperator(character)) {
+			let firstElement = stack.pop();
+			let secondElement = stack.pop();
+			let result = operate(character, secondElement, firstElement);
+			stack.push(result);
+		} else if (isAllNumbers(+character)) {
+			stack.push(+character);
+		} else {
+			return invalid_input;
+		}
 	}
+	return stack.pop();
+}
+
+function handleOperation(expression) {
+	let splitOperators = expression.match(/[^\d()]+|[\d.]+/g);
+	let abstractSyntaxTree = getAbstractSyntaxTree(splitOperators);
+	let result = evaluatePostFixExpression(abstractSyntaxTree);
+	displayValue(result);
+	lastComputedValue = result;
 }
 
 const listOfNumberButtons = document.querySelectorAll('.number');
@@ -117,8 +182,7 @@ listOfNumberButtons.forEach(button => button.addEventListener('click', function(
 
 const listOfOperatorButtons = document.querySelectorAll('button[data-operator]');
 listOfOperatorButtons.forEach(button => button.addEventListener('click', function(e) {
-	handleOperation(button.dataset.value);
-	clearScreen();
+	addValue(button.dataset.value);
 }));
 
 //event handlers for misc buttons
@@ -139,6 +203,6 @@ decimalButton.addEventListener('click', function(e) {
 
 const equalsButton = document.querySelector('button[data-function=equals]');
 equalsButton.addEventListener('click', function(e) {
-	handleOperation(operationInMemory);
-	operationInMemory = null;
+	const expression = screen.textContent;
+	handleOperation(expression);
 })
