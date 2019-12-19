@@ -170,6 +170,8 @@ function handleOperation(expression) {
 	let splitOperators = expression.match(/[^\d()]+|[\d.]+/g);
 	let abstractSyntaxTree = getAbstractSyntaxTree(splitOperators);
 	let result = evaluatePostFixExpression(abstractSyntaxTree);
+	displayValue(result);
+	lastComputedValue = result;
 }
 
 const listOfNumberButtons = document.querySelectorAll('.number');
