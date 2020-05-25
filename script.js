@@ -30,3 +30,27 @@ function deleteFromScreen() {
 
 const deleteButton = document.querySelector("button[data-function=delete");
 deleteButton.addEventListener("click", deleteFromScreen);
+
+// Operator buttons add operators to screen
+function addOperatorToScreen(button) {
+  const currentDisplay = screen.textContent;
+  const regex = /[\+|\-|\*|÷]$/;
+
+  const operator = button.target.dataset.value;
+
+  if (currentDisplay === "") {
+    // don't add to string
+    return;
+  }
+  if (currentDisplay.match(regex)) {
+    const newDisplay = currentDisplay.replace(regex, operator);
+    screen.textContent = newDisplay;
+  } else {
+    screen.textContent += operator;
+  }
+}
+
+const listOfOperatorButtons = document.querySelectorAll("button[data-operator]");
+listOfOperatorButtons.forEach((button) =>
+  button.addEventListener("click", addOperatorToScreen)
+);
