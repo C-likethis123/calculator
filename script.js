@@ -12,3 +12,11 @@ const listOfNumberButtons = document.querySelectorAll(".number");
 listOfNumberButtons.forEach((button) =>
   button.addEventListener("click", addNumberToScreen)
 );
+
+// Clear button clears display
+function clearScreen() {
+  screen.textContent = "";
+}
+
+const clearButton = document.querySelector("button[data-function=clear");
+clearButton.addEventListener("click", clearScreen);
