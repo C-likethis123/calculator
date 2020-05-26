@@ -1,7 +1,9 @@
 const screen = document.querySelector(".screen");
-const regex = /[\+|\-|\*|÷]$/;
+const operatorRegex = /[\+|\-|\*|÷]$/;
 const numberRegex = /[0-9]$/;
 const isAnswerSymbolLast = /Ans$/;
+
+let answerValue = 0;
 
 // Number buttons add numbers to the screen
 function addNumberToScreen(button) {
@@ -38,15 +40,13 @@ deleteButton.addEventListener("click", deleteFromScreen);
 // Operator buttons add operators to screen
 function addOperatorToScreen(button) {
   const currentDisplay = screen.textContent;
-  const regex = /[\+|\-|\*|÷]$/;
-
   const operator = button.target.dataset.value;
 
   if (currentDisplay === "") {
     // don't add to string
     return;
   }
-  if (currentDisplay.match(regex)) {
+  if (currentDisplay.match(operatorRegex)) {
     const newDisplay = currentDisplay.replace(regex, operator);
     screen.textContent = newDisplay;
   } else {
