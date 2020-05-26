@@ -147,6 +147,27 @@ function getAbstractSyntaxTree(infix) {
 	  return postfix.concat(s.dataStore.reverse());
 }
 
+function isOperator(character) {
+  return character.match(operatorRegex);
+}
+
+function isNumber(character) {
+  return character.match(numberRegex);
+}
+
+function operate(character, operand1, operand2) {
+  switch (character) {
+    case "+":
+      return operand1 + operand2;
+    case "-":
+      return operand1 - operand2;
+    case "*":
+      return operand1 * operand2;
+    case "÷":
+      return operand1 / operand2;
+  }
+}
+
 function evaluatePostFixExpression(abstractSyntaxTree) {
 	let stack = [];
 	for (let i = 0; i < abstractSyntaxTree.length; i++) {
