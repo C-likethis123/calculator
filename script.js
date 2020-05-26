@@ -1,5 +1,6 @@
 const screen = document.querySelector(".screen");
-const listOfButtons = document.querySelectorAll("button");
+const regex = /[\+|\-|\*|÷]$/;
+const numberRegex = /[0-9]$/;
 
 // Number buttons add numbers to the screen
 function addNumberToScreen(button) {
@@ -54,3 +55,25 @@ const listOfOperatorButtons = document.querySelectorAll("button[data-operator]")
 listOfOperatorButtons.forEach((button) =>
   button.addEventListener("click", addOperatorToScreen)
 );
+
+// Add brackets
+function addBracketsToScreen() {
+  const currentDisplay = screen.textContent;
+  const leftBracketCount = (currentDisplay.match(/\(/g) || []).length;
+  const rightBracketCount = (currentDisplay.match(/\)/g) || []).length;
+
+  const lastCharacterRightBracket = /\)$/;
+  if (leftBracketCount > 0 && currentDisplay.match(numberRegex)) {
+    screen.textContent += ")";
+  } else if (
+    currentDisplay.match(lastCharacterRightBracket) &&
+    leftBracketCount > rightBracketCount
+  ) {
+    screen.textContent += ")";
+  } else {
+    screen.textContent += "(";
+  }
+}
+
+const bracketButton = document.querySelector("button[data-function=bracket");
+bracketButton.addEventListener("click", addBracketsToScreen);
