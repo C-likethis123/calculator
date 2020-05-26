@@ -58,3 +58,17 @@ const listOfOperatorButtons = document.querySelectorAll("button[data-operator]")
 listOfOperatorButtons.forEach((button) =>
   button.addEventListener("click", addOperatorToScreen)
 );
+
+function evaluateExpression() {
+  const calculatorDisplay = screen.textContent;
+  const expressionToEvaluate = calculatorDisplay.replace(
+    "Ans",
+    `${answerValue}`
+  );
+  const resultOfExpression = evaluate(expressionToEvaluate);
+  answerValue = resultOfExpression;
+  screen.textContent = resultOfExpression;
+}
+
+const equalsButton = document.querySelector("button[data-function=equals]");
+equalsButton.addEventListener("click", evaluateExpression);

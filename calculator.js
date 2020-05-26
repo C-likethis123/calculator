@@ -166,43 +166,12 @@ function evaluatePostFixExpression(abstractSyntaxTree) {
 	return stack.pop();
 }
 
-function handleOperation(expression) {
-	let splitOperators = expression.match(/[^\d()]+|[\d.]+/g);
-	let abstractSyntaxTree = getAbstractSyntaxTree(splitOperators);
-	let result = evaluatePostFixExpression(abstractSyntaxTree);
-	displayValue(result);
-	lastComputedValue = result;
+function evaluate(expression) {
+  let splitOperators = expression.match(/[^\d()]+|[\d.]+/g);
+  const expressionAST = getAbstractSyntaxTree(splitOperators);
+  console.log(expressionAST);
+  const result = evaluatePostFixExpression(expressionAST);
+  console.log(result);
+  return result;
 }
 
-const listOfNumberButtons = document.querySelectorAll('.number');
-listOfNumberButtons.forEach(button => button.addEventListener('click', function(e) {
-	const button = e.target;
-	addValue(button.dataset.value);
-}));
-
-const listOfOperatorButtons = document.querySelectorAll('button[data-operator]');
-listOfOperatorButtons.forEach(button => button.addEventListener('click', function(e) {
-	addValue(button.dataset.value);
-}));
-
-//event handlers for misc buttons
-const deleteButton = document.querySelector('button[data-function=delete]');
-deleteButton.addEventListener('click', function(e) {
-	deleteCharacter();
-});
-
-const clearButton = document.querySelector('button[data-function=clear');
-clearButton.addEventListener('click', function(e) {
-	clearScreen();
-});
-
-const decimalButton = document.querySelector('button[data-value=dot]');
-decimalButton.addEventListener('click', function(e) {
-	addValue(".");
-});
-
-const equalsButton = document.querySelector('button[data-function=equals]');
-equalsButton.addEventListener('click', function(e) {
-	const expression = screen.textContent;
-	handleOperation(expression);
-})
