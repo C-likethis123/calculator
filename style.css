@@ -1,38 +1,43 @@
 @import "https://fonts.googleapis.com/css?family=Josefin+Sans";
 
-h1, p {
-	font-family: 'Josefin Sans';
+h1,
+p {
+  font-family: "Josefin Sans";
 }
 
 .screen {
-	border: 5px black solid;
-	height: 190px;
-	width: 270px;
-	padding: 10px;
+  border: 5px black solid;
+  height: 190px;
+  width: 270px;
+  padding: 10px;
 
-	font-family: helvetica;
-	font-size: 40px;
-	text-align: right;
-	word-wrap: break-word;
-	overflow: auto;
+  font-family: helvetica;
+  font-size: 40px;
+  text-align: right;
+  word-wrap: break-word;
+  overflow: auto;
 }
 
 .calculator {
-	margin: 0 auto;
-	width: 300px;
-	border: 10px solid black;
-	border-radius: 3px;
-	padding: 3px;
+  margin: 0 auto;
+  width: 300px;
+  border: 10px solid black;
+  border-radius: 3px;
+  padding: 3px;
 }
 
 button {
-	background-color: #bebebe;
-	border-radius: 7px;
-	height: 50px;
-	width: 50px;
-	margin: 10px;
+  background-color: #bebebe;
+  border-radius: 7px;
+  height: 50px;
+  width: 50px;
+  margin: 10px;
 }
 
 button:hover {
-	background-color: #f0f0f0;
+  background-color: #f0f0f0;
+}
+
+.equals {
+  width: 280px;
 }
