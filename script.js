@@ -1,6 +1,7 @@
 const screen = document.querySelector(".screen");
 const regex = /[\+|\-|\*|÷]$/;
 const numberRegex = /[0-9]$/;
+const isAnswerSymbolLast = /Ans$/;
 
 // Number buttons add numbers to the screen
 function addNumberToScreen(button) {
@@ -25,7 +26,9 @@ clearButton.addEventListener("click", clearScreen);
 // Delete button deletes last character
 function deleteFromScreen() {
   const currentDisplay = screen.textContent;
-  const newDisplay = currentDisplay.substring(0, currentDisplay.length - 1);
+  const newDisplay = currentDisplay.match(isAnswerSymbolLast)
+    ? currentDisplay.substring(0, currentDisplay.length - 3)
+    : currentDisplay.substring(0, currentDisplay.length - 1);
   screen.textContent = newDisplay;
 }
 
