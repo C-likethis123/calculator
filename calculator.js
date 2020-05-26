@@ -178,22 +178,20 @@ function operate(character, operand1, operand2) {
 }
 
 function evaluatePostFixExpression(abstractSyntaxTree) {
-	let stack = [];
-	for (let i = 0; i < abstractSyntaxTree.length; i++) {
-		let character = abstractSyntaxTree[i];
-		
-		if (isOperator(character)) {
-			let firstElement = stack.pop();
-			let secondElement = stack.pop();
-			let result = operate(character, secondElement, firstElement);
-			stack.push(result);
-		} else if (isAllNumbers(+character)) {
-			stack.push(+character);
-		} else {
-			return invalid_input;
-		}
-	}
-	return stack.pop();
+  let stack = [];
+  for (const character of abstractSyntaxTree) {
+    if (isOperator(character)) {
+      let firstElement = stack.pop();
+      let secondElement = stack.pop();
+      let result = operate(character, secondElement, firstElement);
+      stack.push(result);
+    } else if (isNumber(character)) {
+      stack.push(+character);
+    } else {
+      return invalid_input;
+    }
+  }
+  return stack.pop();
 }
 
 function evaluate(expression) {
