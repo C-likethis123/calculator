@@ -92,7 +92,7 @@ function operate(character, operand1, operand2) {
       return operand1 - operand2;
     case "*":
       return operand1 * operand2;
-    case "÷":
+    case "/":
       return operand1 / operand2;
   }
 }

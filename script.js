@@ -1,5 +1,5 @@
 const screen = document.querySelector(".screen");
-const operatorRegex = /[\+|\-|\*|÷]$/;
+const operatorRegex = /[\+|\-|\*|÷|\/]$/;
 const numberRegex = /[0-9]$/;
 const isAnswerSymbolLast = /Ans$/;
 
@@ -61,10 +61,10 @@ listOfOperatorButtons.forEach((button) =>
 
 function evaluateExpression() {
   const calculatorDisplay = screen.textContent;
-  const expressionToEvaluate = calculatorDisplay.replace(
-    "Ans",
-    `${answerValue}`
-  );
+  const expressionToEvaluate = calculatorDisplay
+    .replace("Ans", `${answerValue}`)
+    .replace("÷", "/");
+
   const resultOfExpression = evaluate(expressionToEvaluate);
   answerValue = resultOfExpression;
   screen.textContent = resultOfExpression;
