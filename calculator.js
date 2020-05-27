@@ -1,3 +1,6 @@
+/*
+TODO: only evaluate valid expressions
+*/
 const invalid_input = "ERROR";
 // Code adapted from: https://rosettacode.org/wiki/Parsing/Shunting-yard_algorithm#JavaScript
 function getAbstractSyntaxTree(infix) {
@@ -73,8 +76,6 @@ function evaluatePostFixExpression(abstractSyntaxTree) {
 function evaluate(expression) {
   const splitOperators = expression.match(/[^\d()]+|[\(\)]+|[\d.]+/g);
   const expressionAST = getAbstractSyntaxTree(splitOperators);
-  console.log(expressionAST);
   const result = evaluatePostFixExpression(expressionAST);
-  console.log(result);
   return result;
 }
