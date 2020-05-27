@@ -9,7 +9,10 @@ let answerValue = 0;
 function addNumberToScreen(button) {
   const targetButton = button.target;
   const textToDisplay = targetButton.dataset.value;
-  screen.textContent += textToDisplay;
+  const currentDisplay = screen.textContent;
+  screen.textContent += currentDisplay.match(/\)$/)
+    ? `*${textToDisplay}`
+    : textToDisplay;
 }
 
 const listOfNumberButtons = document.querySelectorAll(".number");
@@ -58,6 +61,19 @@ const listOfOperatorButtons = document.querySelectorAll("button[data-operator]")
 listOfOperatorButtons.forEach((button) =>
   button.addEventListener("click", addOperatorToScreen)
 );
+
+// Add brackets when clicked
+function addLeftBracket() {
+  const currentDisplay = screen.textContent;
+  screen.textContent += currentDisplay.match(numberRegex) ? "*(" : "(";
+}
+const leftBracketButton = document.querySelector("#left-bracket");
+leftBracketButton.addEventListener("click", addLeftBracket);
+
+const rightBracketButton = document.querySelector("#right-bracket");
+rightBracketButton.addEventListener("click", function (button) {
+  addNumberToScreen(button);
+});
 
 function evaluateExpression() {
   const calculatorDisplay = screen.textContent;
