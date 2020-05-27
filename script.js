@@ -64,15 +64,18 @@ listOfOperatorButtons.forEach((button) =>
 
 // Add brackets when clicked
 function addLeftBracket() {
-  const currentDisplay = screen.textContent;
-  screen.textContent += currentDisplay.match(numberRegex) ? "*(" : "(";
+  const currentDisplay = screen.textContent.substr(-1);
+  screen.textContent +=
+    currentDisplay.match(numberRegex) || currentDisplay === ")" ? "*(" : "(";
 }
 const leftBracketButton = document.querySelector("#left-bracket");
 leftBracketButton.addEventListener("click", addLeftBracket);
 
 const rightBracketButton = document.querySelector("#right-bracket");
 rightBracketButton.addEventListener("click", function (button) {
-  addNumberToScreen(button);
+  const targetButton = button.target;
+  const textToDisplay = targetButton.dataset.value;
+  screen.textContent += textToDisplay;
 });
 
 function isValid(mathExpression) {
