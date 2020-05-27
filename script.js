@@ -75,15 +75,25 @@ rightBracketButton.addEventListener("click", function (button) {
   addNumberToScreen(button);
 });
 
+function isValid(mathExpression) {
+  if (mathExpression.match(/[\+|\-|\/|\*|\(]$/)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 function evaluateExpression() {
   const calculatorDisplay = screen.textContent;
   const expressionToEvaluate = calculatorDisplay
     .replace("Ans", `${answerValue}`)
     .replace("÷", "/");
 
-  const resultOfExpression = evaluate(expressionToEvaluate);
-  answerValue = resultOfExpression;
-  screen.textContent = resultOfExpression;
+  if (isValid(expressionToEvaluate)) {
+    const resultOfExpression = evaluate(expressionToEvaluate);
+    answerValue = resultOfExpression;
+    screen.textContent = resultOfExpression;
+  }
 }
 
 const equalsButton = document.querySelector("button[data-function=equals]");
